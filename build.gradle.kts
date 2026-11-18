@@ -20,11 +20,19 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
+
 
 
 
@@ -40,6 +48,15 @@ dependencies {
 	implementation("org.mapstruct:mapstruct:1.6.3")
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 	testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
+
+	// Source: https://mvnrepository.com/artifact/org.openapitools/jackson-databind-nullable
+	implementation("org.openapitools:jackson-databind-nullable:0.2.13")
+
+	// Source: https://mvnrepository.com/artifact/net.javacrumbs.json-unit/json-unit-assertj
+	testImplementation("net.javacrumbs.json-unit:json-unit-assertj:6.4.0")
+
+	// Source: https://mvnrepository.com/artifact/org.instancio/instancio-junit
+	testImplementation("org.instancio:instancio-junit:6.2.1")
 }
 
 tasks.withType<Test> {
