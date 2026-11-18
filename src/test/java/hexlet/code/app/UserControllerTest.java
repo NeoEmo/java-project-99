@@ -21,7 +21,10 @@ import tools.jackson.databind.ObjectMapper;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -50,7 +53,8 @@ public class UserControllerTest {
 				.supply(Select.field(User::getEmail), () -> "example@hotmail.com")
 				.supply(Select.field(User::getFirstName), () -> "John")
 				.supply(Select.field(User::getLastName), () -> "Doe")
-				.supply(Select.field(User::getPasswordDigest), () -> passwordEncoder.encode("1234567890a"))
+				.supply(Select.field(User::getPasswordDigest),
+						() -> passwordEncoder.encode("1234567890a"))
 				.create();
 
 		testUser = userRepository.save(testUser);

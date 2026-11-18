@@ -14,26 +14,30 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionsHandler {
-	private static final Logger log = LoggerFactory.getLogger(GlobalExceptionsHandler.class);
+	private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionsHandler.class);
 
 	@ExceptionHandler(ResourceNotFoundException.class)
-	public ResponseEntity<Map<String,String>> handleResourceNotFoundException(ResourceNotFoundException ex){
+	public ResponseEntity<Map<String, String>> handleResourceNotFoundException(ResourceNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", ex.getMessage()));
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<Map<String,String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
+	public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(
+			MethodArgumentNotValidException ex) {
+
 		var errors = ex.getBindingResult().getFieldErrors().stream()
 				.map(error -> error.getField() + ": " + error.getDefaultMessage())
 				.toList();
 
-		log.warn("Validation failed: {}", errors);
+		LOG.warn("Validation failed: {}", errors);
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Invalid request data",
 				"details", errors.toString()));
 	}
 
 	@ExceptionHandler(ResourceAlreadyExistException.class)
-	public ResponseEntity<Map<String,String>> handleResourceAlreadyExistException(ResourceAlreadyExistException ex){
+	public ResponseEntity<Map<String, String>> handleResourceAlreadyExistException(
+			ResourceAlreadyExistException ex) {
+
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", ex.getMessage()));
 	}
 }

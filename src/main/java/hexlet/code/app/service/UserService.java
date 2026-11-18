@@ -38,15 +38,18 @@ public class UserService {
 		// добавлены методы по поиску имени и фамилии
 		/*
 		if (userRepository.findByFirstName(data.getFirstName()).isPresent()) {
-			throw new ResourceAlreadyExistException("User firstName \"" + data.getFirstName() + "\" already exists");
+			throw new ResourceAlreadyExistException("User firstName \""
+					+ data.getFirstName() + "\" already exists");
 		}
 		if (userRepository.findByLastName(data.getLastName()).isPresent()) {
-			throw new ResourceAlreadyExistException("User lastName \"" + data.getLastName() + "\" already exists");
+			throw new ResourceAlreadyExistException("User lastName \""
+					+ data.getLastName() + "\" already exists");
 		}
-		 */
+		*/
 
 		if (userRepository.findByEmail(data.getEmail()).isPresent()) {
-			throw new ResourceAlreadyExistException("User email \"" + data.getEmail() + "\" already exists");
+			throw new ResourceAlreadyExistException("User email \""
+					+ data.getEmail() + "\" already exists");
 		}
 
 
@@ -64,12 +67,13 @@ public class UserService {
 		var user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found!"));
 
-		if (data.getEmail() != null && data.getEmail().isPresent() && data.getEmail().get() != null ) {
+		if (data.getEmail() != null && data.getEmail().isPresent() && data.getEmail().get() != null) {
 			var newEmail = data.getEmail().get();
 			var existingUser = userRepository.findByEmail(newEmail);
 
 			if (existingUser.isPresent() && !existingUser.get().getId().equals(id)) {
-				throw new ResourceAlreadyExistException("User email \"" + newEmail + "\" already exists");
+				throw new ResourceAlreadyExistException("User email \""
+						+ newEmail + "\" already exists");
 			}
 		}
 
@@ -85,7 +89,7 @@ public class UserService {
 	}
 
 	public void delete(Long id) {
-		if(!userRepository.existsById(id)) {
+		if (!userRepository.existsById(id)) {
 			throw new ResourceNotFoundException("User with id " + id + " not found!");
 		}
 		userRepository.deleteById(id);
