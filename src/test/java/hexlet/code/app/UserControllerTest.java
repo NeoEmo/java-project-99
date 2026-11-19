@@ -4,6 +4,7 @@ import hexlet.code.app.dto.user.UserCreateDTO;
 import hexlet.code.app.dto.user.UserPatchDTO;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
+import hexlet.code.app.utils.JWTUtils;
 import jakarta.transaction.Transactional;
 import org.instancio.Instancio;
 import org.instancio.Select;
@@ -44,7 +45,11 @@ public class UserControllerTest {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private JWTUtils jwtUtils;
+
 	private User testUser;
+	private String token;
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -58,6 +63,7 @@ public class UserControllerTest {
 				.create();
 
 		testUser = userRepository.save(testUser);
+		token = jwtUtils.generateToken(testUser.getUsername());
 	}
 
 	@Test
@@ -127,6 +133,7 @@ public class UserControllerTest {
 		dto.setPassword(JsonNullable.of("newPassword12345"));
 
 		var request = patch("/api/users/" + testUser.getId())
+				.headers(headers -> headers.add("Authorization", "Bearer " + token))
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto));
 
@@ -134,10 +141,12 @@ public class UserControllerTest {
 
 		dto.setEmail(JsonNullable.of("hexlet123@example.com"));
 		var request2 = patch("/api/users/" + testUser.getId())
+				.headers(headers -> headers.add("Authorization", "Bearer " + token))
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto));
 
 		mockMvc.perform(request2).andExpect(status().isOk()).andReturn();
+
 		var newTestUser = userRepository.findById(testUser.getId()).get();
 		assertThat(newTestUser.getEmail()).isEqualTo(dto.getEmail().get());
 		assertThat(passwordEncoder.matches(dto.getPassword().get(), newTestUser.getPasswordDigest())).isTrue();
@@ -160,11 +169,19 @@ public class UserControllerTest {
 
 	@Test
 	public void testDelete() throws Exception {
-		var request = delete("/api/users/" + testUser.getId());
+		var request = delete("/api/users/" + testUser.getId())
+				.contentType(MediaType.APPLICATION_JSON)
+				.headers(headers -> headers.add("Authorization", "Bearer " + token))
+				.content(objectMapper.writeValueAsString(testUser));
+
 		mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
 		assertThat(userRepository.existsById(testUser.getId())).isFalse();
 
-		var request2 =  delete("/api/users/" + testUser.getId());
+		var request2 =  delete("/api/users/" + testUser.getId())
+				.contentType(MediaType.APPLICATION_JSON)
+				.headers(headers -> headers.add("Authorization", "Bearer " + token))
+				.content(objectMapper.writeValueAsString(testUser));
+
 		mockMvc.perform(request2).andExpect(status().isNotFound()).andReturn();
 	}
 }
