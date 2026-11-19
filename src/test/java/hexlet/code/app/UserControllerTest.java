@@ -1,7 +1,7 @@
 package hexlet.code.app;
 
-import hexlet.code.app.dto.UserCreateDTO;
-import hexlet.code.app.dto.UserPatchDTO;
+import hexlet.code.app.dto.user.UserCreateDTO;
+import hexlet.code.app.dto.user.UserPatchDTO;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
 import jakarta.transaction.Transactional;
