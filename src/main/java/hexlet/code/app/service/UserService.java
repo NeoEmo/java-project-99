@@ -7,11 +7,13 @@ import hexlet.code.app.exception.ResourceAlreadyExistException;
 import hexlet.code.app.exception.ResourceNotFoundException;
 import hexlet.code.app.mapper.UserMapper;
 import hexlet.code.app.repository.UserRepository;
+import hexlet.code.app.utils.UserUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,9 @@ public class UserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private UserUtils userUtils;
 
 	public Page<UserDTO> index(int page, int size) {
 		var safePage = Math.max(0, page - 1);
@@ -64,6 +69,12 @@ public class UserService {
 	}
 
 	public UserDTO update(UserPatchDTO data, Long id) {
+		var currentUser = userUtils.getCurrentUser();
+
+		if (currentUser == null || !currentUser.getId().equals(id)) {
+			throw new AccessDeniedException("You don`t have permission to edit this user");
+		}
+
 		var user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found!"));
 
@@ -89,6 +100,12 @@ public class UserService {
 	}
 
 	public void delete(Long id) {
+		var currentUser = userUtils.getCurrentUser();
+
+		if (currentUser == null || !currentUser.getId().equals(id)) {
+			throw new AccessDeniedException("You don`t have permission to delete this user");
+		}
+
 		if (!userRepository.existsById(id)) {
 			throw new ResourceNotFoundException("User with id " + id + " not found!");
 		}
