@@ -40,7 +40,9 @@ public class SecurityConfig {
 						.requestMatchers("/h2-console", "/h2-console/**").permitAll()
 						.dispatcherTypeMatchers(
 								DispatcherType.REQUEST, DispatcherType.FORWARD).permitAll()
-						.requestMatchers("/", "/**", "/api/login").permitAll()
+						.requestMatchers("/", "/**", "/api/login",
+								"/index.html", "/assets/**", "/index.html/**",
+								"/#/login", "/#/login/**").permitAll()
 						.anyRequest().authenticated())
 				.headers(headers -> headers
 						.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
