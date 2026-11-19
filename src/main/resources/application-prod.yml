@@ -6,3 +6,6 @@ spring:
 server:
   error:
     include-stacktrace: never
+rsa:
+  private-key: file:/run/secrets/jwt_private_key
+  public-key: file:/run/secrets/jwt_public_key

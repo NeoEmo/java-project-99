@@ -5,3 +5,4 @@ spring:
     console:
       enabled: true
       path: /h2-console
+debug: true
