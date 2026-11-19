@@ -1,3 +1,6 @@
+create-all-txt-java:
+	find . -type f -name "*.java" -exec cat {} + > all_code.txt
+
 setup:
 	./gradlew bootRun
 
