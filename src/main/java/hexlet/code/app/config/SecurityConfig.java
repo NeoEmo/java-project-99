@@ -5,6 +5,7 @@ import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -38,11 +39,14 @@ public class SecurityConfig {
 				.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/h2-console", "/h2-console/**").permitAll()
-						.dispatcherTypeMatchers(
-								DispatcherType.REQUEST, DispatcherType.FORWARD).permitAll()
-						.requestMatchers("/", "/**", "/api/login",
-								"/index.html", "/assets/**", "/index.html/**",
-								"/#/login", "/#/login/**").permitAll()
+//						.dispatcherTypeMatchers(
+//								DispatcherType.REQUEST, DispatcherType.FORWARD).permitAll()
+						.requestMatchers("/h2-console", "/h2-console/**").permitAll()
+						.requestMatchers(HttpMethod.POST, "/api/login").permitAll()
+						.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+						.requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
+						.requestMatchers(HttpMethod.GET, "/api/task_statuses/**").permitAll()
+						.requestMatchers("/", "/index.html", "/assets/**", "/favicon.ico").permitAll()
 						.anyRequest().authenticated())
 				.headers(headers -> headers
 						.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
