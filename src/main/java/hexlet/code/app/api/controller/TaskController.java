@@ -1,0 +1,52 @@
+package hexlet.code.app.api.controller;
+
+import hexlet.code.app.dto.task.TaskCreateDTO;
+import hexlet.code.app.dto.task.TaskDTO;
+import hexlet.code.app.dto.task.TaskPatchDTO;
+import hexlet.code.app.service.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.util.List;
+
+@RequestMapping("/api/tasks")
+@RestController
+public class TaskController {
+    @Autowired
+    private TaskService taskService;
+
+    @GetMapping
+    public List<TaskDTO> index() {
+        return taskService.index();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TaskDTO> show(@PathVariable Long id) {
+        return ResponseEntity.ok().body(taskService.findById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<TaskDTO> create(@RequestBody TaskCreateDTO data) {
+        var dto = taskService.create(data);
+        var location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(dto.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(dto);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<TaskDTO> update(@PathVariable Long id, @RequestBody TaskPatchDTO data) {
+        return ResponseEntity.ok().body(taskService.update(data, id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<TaskDTO> delete(@PathVariable Long id) {
+        taskService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+}
