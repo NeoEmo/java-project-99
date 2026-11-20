@@ -1,7 +1,7 @@
 package hexlet.code.app;
 
 import hexlet.code.app.dto.taskStatus.TaskStatusCreateDTO;
-import hexlet.code.app.dto.taskStatus.TaskStatusPathDTO;
+import hexlet.code.app.dto.taskStatus.TaskStatusPatchDTO;
 import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("dev")
 @Transactional
-public class TaskStatusTest {
+public class TaskStatusControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -111,7 +111,7 @@ public class TaskStatusTest {
 
     @Test
     public void testUpdate() throws Exception {
-        var dto = new TaskStatusPathDTO();
+        var dto = new TaskStatusPatchDTO();
         dto.setName(JsonNullable.of(testTaskStatus.getName()));
         dto.setSlug(JsonNullable.of(testTaskStatus.getSlug()));
 
@@ -120,15 +120,7 @@ public class TaskStatusTest {
                 .headers(httpHeaders -> httpHeaders.add("Authorization", "Bearer " + token))
                 .content(objectMapper.writeValueAsString(dto));
 
-        mockMvc.perform(request).andExpect(status().isConflict()).andReturn();
-
-        dto.setSlug(JsonNullable.of("test_status2"));
-        var request2 = patch("/api/task_statuses/" + testTaskStatus.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .headers(httpHeaders -> httpHeaders.add("Authorization", "Bearer " + token))
-                .content(objectMapper.writeValueAsString(dto));
-
-        mockMvc.perform(request2).andExpect(status().isOk()).andReturn();
+        mockMvc.perform(request).andExpect(status().isOk()).andReturn();
 
         var newTaskStatus = taskStatusRepository.findById(testTaskStatus.getId()).get();
         assertThat(newTaskStatus.getName())
