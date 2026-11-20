@@ -2,6 +2,7 @@ package hexlet.code.app.handler;
 
 import hexlet.code.app.exception.ResourceAlreadyExistException;
 import hexlet.code.app.exception.ResourceNotFoundException;
+import hexlet.code.app.exception.EntityAlreadyAssignedToTaskException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -55,5 +56,13 @@ public class GlobalExceptionsHandler {
 			AccessDeniedException ex) {
 
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", ex.getMessage()));
+	}
+
+	@ExceptionHandler(EntityAlreadyAssignedToTaskException.class)
+	public ResponseEntity<Map<String, String>> handleUserAlreadyAssignedToTaskException(
+			EntityAlreadyAssignedToTaskException ex
+	) {
+
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", ex.getMessage()));
 	}
 }
