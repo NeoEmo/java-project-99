@@ -3,7 +3,7 @@ package hexlet.code.app.api.controller;
 import hexlet.code.app.dto.taskStatus.TaskStatusCreateDTO;
 import hexlet.code.app.dto.taskStatus.TaskStatusDTO;
 
-import hexlet.code.app.dto.taskStatus.TaskStatusPathDTO;
+import hexlet.code.app.dto.taskStatus.TaskStatusPatchDTO;
 import hexlet.code.app.service.TaskStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +42,7 @@ public class TaskStatusController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<TaskStatusDTO> update(@PathVariable Long id, @RequestBody TaskStatusPathDTO data) {
+    public ResponseEntity<TaskStatusDTO> update(@PathVariable Long id, @RequestBody TaskStatusPatchDTO data) {
         return ResponseEntity.ok().body(taskStatusService.update(data, id));
     }
 
