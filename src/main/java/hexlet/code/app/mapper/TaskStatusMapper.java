@@ -2,7 +2,7 @@ package hexlet.code.app.mapper;
 
 import hexlet.code.app.dto.taskStatus.TaskStatusCreateDTO;
 import hexlet.code.app.dto.taskStatus.TaskStatusDTO;
-import hexlet.code.app.dto.taskStatus.TaskStatusPathDTO;
+import hexlet.code.app.dto.taskStatus.TaskStatusPatchDTO;
 import hexlet.code.app.model.TaskStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -18,5 +18,5 @@ public interface TaskStatusMapper {
 
     TaskStatus toEntity(TaskStatusCreateDTO dto);
 
-    void update(TaskStatusPathDTO dto, @MappingTarget TaskStatus status);
+    void update(TaskStatusPatchDTO dto, @MappingTarget TaskStatus status);
 }
