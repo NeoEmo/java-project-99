@@ -39,13 +39,13 @@ public class SecurityConfig {
 				.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/h2-console", "/h2-console/**").permitAll()
-//						.dispatcherTypeMatchers(
-//								DispatcherType.REQUEST, DispatcherType.FORWARD).permitAll()
 						.requestMatchers("/h2-console", "/h2-console/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/login").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/task_statuses/**").permitAll()
+						// Если всё-таки удалять можно не всем, то очепятка в 8-м шаге, и надо будет сообщить
+//						.requestMatchers(HttpMethod.DELETE, "/api/tasks/**").permitAll()
 						.requestMatchers("/", "/index.html", "/assets/**", "/favicon.ico").permitAll()
 						.anyRequest().authenticated())
 				.headers(headers -> headers
