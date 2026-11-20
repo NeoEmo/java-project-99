@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Table(name = "task_status")
-public class TaskStatus {
+public class TaskStatus implements BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
