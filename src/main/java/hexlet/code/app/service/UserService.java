@@ -5,7 +5,9 @@ import hexlet.code.app.dto.user.UserDTO;
 import hexlet.code.app.dto.user.UserPatchDTO;
 import hexlet.code.app.exception.ResourceAlreadyExistException;
 import hexlet.code.app.exception.ResourceNotFoundException;
+import hexlet.code.app.exception.EntityAlreadyAssignedToTaskException;
 import hexlet.code.app.mapper.UserMapper;
+import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.utils.UserUtils;
 import jakarta.transaction.Transactional;
@@ -28,6 +30,9 @@ public class UserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private TaskRepository taskRepository;
 
 	@Autowired
 	private UserUtils userUtils;
@@ -102,6 +107,10 @@ public class UserService {
 	public void delete(Long id) {
 		if (!userRepository.existsById(id)) {
 			throw new ResourceNotFoundException("User with id " + id + " not found!");
+		}
+
+		if (taskRepository.existsByAssigneeId(id)) {
+			throw new EntityAlreadyAssignedToTaskException("User with id " + id + " already assigned to task!");
 		}
 
 		var currentUser = userUtils.getCurrentUser();
