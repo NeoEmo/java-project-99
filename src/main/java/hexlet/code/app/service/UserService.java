@@ -100,15 +100,16 @@ public class UserService {
 	}
 
 	public void delete(Long id) {
+		if (!userRepository.existsById(id)) {
+			throw new ResourceNotFoundException("User with id " + id + " not found!");
+		}
+
 		var currentUser = userUtils.getCurrentUser();
 
 		if (currentUser == null || !currentUser.getId().equals(id)) {
 			throw new AccessDeniedException("You don`t have permission to delete this user");
 		}
 
-		if (!userRepository.existsById(id)) {
-			throw new ResourceNotFoundException("User with id " + id + " not found!");
-		}
 		userRepository.deleteById(id);
 	}
 }
