@@ -1,12 +1,9 @@
 package hexlet.code.app;
 
 import hexlet.code.app.dto.task.TaskCreateDTO;
-import hexlet.code.app.dto.task.TaskDTO;
 import hexlet.code.app.dto.task.TaskPatchDTO;
-import hexlet.code.app.mapper.TaskMapper;
 import hexlet.code.app.model.Task;
-import hexlet.code.app.model.TaskStatus;
-import hexlet.code.app.model.User;
+import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
@@ -25,6 +22,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -53,7 +54,7 @@ public class TaskControllerTest {
     private TaskStatusRepository taskStatusRepository;
 
     @Autowired
-    private TaskMapper taskMapper;
+    private LabelRepository labelRepository;
 
     @Autowired
     private JWTUtils jwtUtils;
@@ -73,6 +74,7 @@ public class TaskControllerTest {
                 .supply(Select.field(Task::getIndex), () -> 954)
                 .supply(Select.field(Task::getTaskStatus), () -> taskStatusRepository.findById(1L).get())
                 .supply(Select.field(Task::getAssignee), () -> user)
+                .supply(Select.field(Task::getLabels), () -> new HashSet<>(Set.of(labelRepository.findById(1L).get())))
                 .create();
 
         testTask = taskRepository.save(testTask);
@@ -143,7 +145,7 @@ public class TaskControllerTest {
         var dto = new TaskPatchDTO();
         dto.setAssigneeId(JsonNullable.of(testTask.getAssignee().getId()));
         dto.setTaskStatus(JsonNullable.of(testTask.getTaskStatus().getSlug()));
-        dto.setName(JsonNullable.of(testTask.getName()));
+        dto.setName(JsonNullable.of("Test task2"));
         dto.setDescription(JsonNullable.of(testTask.getDescription()));
         dto.setIndex(JsonNullable.of(testTask.getIndex()));
 
@@ -191,5 +193,54 @@ public class TaskControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request2).andExpect(status().isNotFound()).andReturn();
+    }
+
+    @Test
+    public void testUpdateLabel() throws Exception {
+        var dto = new TaskPatchDTO();
+        dto.setLabels(JsonNullable.of(new HashSet<>(Set.of(labelRepository.findAll()
+                .stream().map(l -> l.getId()).toArray(Long[]::new)))));
+
+        var request = patch("/api/tasks/" + testTask.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders ->  httpHeaders.add("Authorization", "Bearer " + token))
+                .content(objectMapper.writeValueAsString(dto));
+
+        mockMvc.perform(request).andExpect(status().isOk()).andReturn();
+        var newTask = taskRepository.findById(testTask.getId()).get();
+        assertThat(newTask.getLabels().size()).isEqualTo(2);
+        assertThat(newTask.getLabels().contains(dto.getLabels().get()));
+
+        dto.setLabels(JsonNullable.of(Set.of()));
+
+        var request2 = patch("/api/tasks/" + testTask.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders ->  httpHeaders.add("Authorization", "Bearer " + token))
+                .content(objectMapper.writeValueAsString(dto));
+
+        mockMvc.perform(request2).andExpect(status().isOk()).andReturn();
+        newTask = taskRepository.findById(testTask.getId()).get();
+        assertThat(newTask.getLabels().size()).isEqualTo(0);
+        assertThat(newTask.getLabels().contains(dto.getLabels().get()));
+    }
+
+    @Test
+    public void testCreateLabel() throws Exception {
+        var dto = new TaskCreateDTO();
+        dto.setLabels(new HashSet<Long>(Set.of(labelRepository.findAll()
+                .stream().map(l -> l.getId()).toArray(Long[]::new))));
+        dto.setName("Test task2");
+
+        var request = post("/api/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders ->  httpHeaders.add("Authorization", "Bearer " + token))
+                .content(objectMapper.writeValueAsString(dto));
+
+        mockMvc.perform(request).andExpect(status().isCreated()).andReturn();
+        var newTask = taskRepository.findByName(dto.getName()).get();
+        assertThat(newTask.getLabels().size()).isEqualTo(2);
+
+        assertThat(newTask.getLabels().stream().map(l -> l.getId()).collect(Collectors.toSet()))
+                .isEqualTo(dto.getLabels());
     }
 }
