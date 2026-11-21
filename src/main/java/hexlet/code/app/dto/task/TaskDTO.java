@@ -2,12 +2,14 @@ package hexlet.code.app.dto.task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import hexlet.code.app.model.Label;
 import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.model.User;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,4 +33,7 @@ public class TaskDTO {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate createdAt;
+
+    @JsonProperty("taskLabelIds")
+    private Set<Long> labels;
 }
