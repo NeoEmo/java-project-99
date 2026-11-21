@@ -37,8 +37,7 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
 
-
-
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.2.1")
 
 	runtimeOnly("com.h2database:h2")
 	compileOnly("com.h2database:h2")
