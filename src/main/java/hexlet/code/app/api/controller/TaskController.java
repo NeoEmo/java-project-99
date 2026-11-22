@@ -2,6 +2,7 @@ package hexlet.code.app.api.controller;
 
 import hexlet.code.app.dto.task.TaskCreateDTO;
 import hexlet.code.app.dto.task.TaskDTO;
+import hexlet.code.app.dto.task.TaskParamsDTO;
 import hexlet.code.app.dto.task.TaskPatchDTO;
 import hexlet.code.app.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,11 @@ public class TaskController {
     private TaskService taskService;
 
     @GetMapping
-    public List<TaskDTO> index() {
-        return taskService.index();
+    public List<TaskDTO> index(
+            TaskParamsDTO params,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return taskService.index(params, page, size);
     }
 
     @GetMapping("/{id}")
