@@ -9,3 +9,17 @@ server:
 rsa:
   private-key: file:/run/secrets/jwt_private_key
   public-key: file:/run/secrets/jwt_public_key
+
+sentry:
+  dsn: ${SENTRY_AUTH_TOKEN}
+
+  data-collection:
+    user-info: false
+
+  tracesSampleRate: 1.0
+
+  profileSessionSampleRate: 1.0
+  profileLifecycle: TRACE
+
+  logs:
+    enabled: true
