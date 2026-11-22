@@ -250,18 +250,36 @@ public class TaskControllerTest {
 
     @Test
     public void testFilterIndex() throws Exception {
+        // Специально создаём второй Task, который не подходит под все фильтры
+        var dto = new TaskCreateDTO();
+        dto.setIndex(343);
+        dto.setAssigneeId(1L);
+        dto.setName("sadsddfgdf");
+        dto.setTaskStatus("review");
+        dto.setLabels(Set.of(2L));
+
+        var request = post("/api/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders ->  httpHeaders.add("Authorization", "Bearer " + token))
+                .content(objectMapper.writeValueAsString(dto));
+
+        mockMvc.perform(request).andExpect(status().isCreated()).andReturn();
+
         var params = new TaskParamsDTO();
         params.setAssigneeId(1L);
         params.setLabelId(1L);
         params.setStatus("draft");
         params.setTitleCont("Test");
 
-        var request = get("/api/tasks")
+        var request2 = get("/api/tasks")
                 .headers(httpHeaders ->  httpHeaders.add("Authorization", "Bearer " + token))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(params));
+                .param("titleCont", params.getTitleCont())
+                .param("assigneeId", params.getAssigneeId().toString())
+                .param("status", params.getStatus())
+                .param("labelId", params.getLabelId().toString());
 
-        var result = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
+        var result = mockMvc.perform(request2).andExpect(status().isOk()).andReturn();
         var body = result.getResponse().getContentAsString();
 
         assertThatJson(body).isArray();
@@ -277,5 +295,6 @@ public class TaskControllerTest {
                 assertThat(taskNode.get("status").asString()).isEqualTo(params.getStatus());
             }
         }
+        assertThat(taskFound).isTrue();
     }
 }
