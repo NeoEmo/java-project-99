@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,8 +26,10 @@ public class LabelController {
     private LabelService labelService;
 
     @GetMapping
-    public List<LabelDTO> index() {
-        return labelService.index();
+    public ResponseEntity<List<LabelDTO>> index() {
+        var list = labelService.index();
+
+        return ResponseEntity.ok().header("X-total-Count", String.valueOf(list.size())).body(list);
     }
 
     @GetMapping("/{id}")
@@ -47,7 +49,7 @@ public class LabelController {
         return ResponseEntity.created(location).body(dto);
     }
 
-    @PatchMapping("/{id}")
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH})
     public ResponseEntity<LabelDTO> update(@PathVariable Long id, @RequestBody LabelPatchDTO data) {
         return ResponseEntity.ok().body(labelService.update(data, id));
     }

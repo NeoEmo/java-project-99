@@ -6,18 +6,19 @@ import hexlet.code.app.dto.user.UserPatchDTO;
 import hexlet.code.app.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -27,11 +28,14 @@ public class UserController {
 	private UserService userService;
 
 	@GetMapping
-	public ResponseEntity<Page<UserDTO>> index(
+	public ResponseEntity<List<UserDTO>> index(
 			@RequestParam(defaultValue = "1") int page,
 			@RequestParam(defaultValue = "10") int size) {
 
-		return ResponseEntity.ok(userService.index(page, size));
+		var result = userService.index(page, size);
+
+		return ResponseEntity.ok()
+				.header("X-total-Count", String.valueOf(result.size())).body(result);
 	}
 
 	@PostMapping
@@ -46,7 +50,7 @@ public class UserController {
 		return ResponseEntity.created(location).body(dto);
 	}
 
-	@PatchMapping("/{id}")
+	@RequestMapping(value = "/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH})
 	public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserPatchDTO data) {
 		return ResponseEntity.ok().body(userService.update(data, id));
 	}
