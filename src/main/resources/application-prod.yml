@@ -14,8 +14,8 @@ server:
     include-stacktrace: never
 
 rsa:
-  private-key: file:/run/secrets/private.pem
-  public-key: file:/run/secrets/public.pem
+  private-key: file:/run/secrets/jwt_private_key
+  public-key: file:/run/secrets/jwt_public_key
 
 sentry:
   dsn: ${SENTRY_AUTH_TOKEN:}
