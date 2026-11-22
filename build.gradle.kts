@@ -40,7 +40,8 @@ dependencies {
 
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.2.1")
 
-	implementation(platform("io.sentry:sentry-bom:8.65.0"))
+	implementation("io.sentry:sentry-spring-boot-4:8.65.0")
+	implementation("io.sentry:sentry-async-profiler:8.65.0")
 
 	implementation("io.sentry:sentry-async-profiler")
 
