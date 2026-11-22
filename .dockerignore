@@ -1,0 +1,9 @@
+**/.gradle
+**/build
+**/out
+**/.git
+**/.idea
+**/.vscode
+**/node_modules
+*.iml
+all_code.txt
