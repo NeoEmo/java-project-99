@@ -1,11 +1,16 @@
+.PHONY: start keys
+
 create-all-txt-java:
 	find . -type f -name "*.java" -exec cat {} + > all_code.txt
 
-setup:
-	mkdir -p certs
-	[ -f file:/run/secrets/private.pem ] || openssl genpkey -out certs/private.pem -algorithm RSA -pkeyopt rsa_keygen_bits:2048
-	[ -f certs/public.pem ] || openssl rsa -in certs/private.pem -pubout -out certs/public.pem
-	./gradlew bootRun
+keys:
+	mkdir -p /run/secrets
+	if [ ! -s /run/secrets/jwt_private_key ] || [ ! -s /run/secrets/jwt_public_key ]; then \
+		openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out /run/secrets/jwt_private_key; \
+		openssl pkey -in /run/secrets/jwt_private_key -pubout -out /run/secrets/jwt_public_key; \
+	fi
+	chmod 600 /run/secrets/jwt_private_key
+	chmod 644 /run/secrets/jwt_public_key
 
 run-dev:
 	SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun
@@ -14,5 +19,5 @@ run-dev-win:
 	SPRING_PROFILES_ACTIVE=dev .\gradlew bootRun
 
 start:
-	$(MAKE) setup
+	$(MAKE) keys
 	SPRING_PROFILES_ACTIVE=prod ./gradlew bootRun
