@@ -12,12 +12,13 @@ import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.utils.UserUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -37,10 +38,10 @@ public class UserService {
 	@Autowired
 	private UserUtils userUtils;
 
-	public Page<UserDTO> index(int page, int size) {
+	public List<UserDTO> index(int page, int size) {
 		var safePage = Math.max(0, page - 1);
 		var pageable = PageRequest.of(safePage, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-		return userRepository.findAll(pageable).map(userMapper::toDTO);
+		return userRepository.findAll(pageable).map(userMapper::toDTO).toList();
 	}
 
 	public UserDTO create(UserCreateDTO data) {
