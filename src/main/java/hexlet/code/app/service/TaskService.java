@@ -9,6 +9,7 @@ import hexlet.code.app.exception.ResourceNotFoundException;
 import hexlet.code.app.mapper.TaskMapper;
 import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.specification.TaskSpecification;
+import io.sentry.Sentry;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +31,13 @@ public class TaskService {
     private TaskSpecification taskSpecification;
 
     public List<TaskDTO> index(TaskParamsDTO params, int page, int size) {
+        // Проверка
+        try {
+            throw new Exception("This is a test.");
+        } catch (Exception e) {
+            Sentry.captureException(e);
+        }
+        // Конец проверки
         var safePage = Math.max(0, page - 1);
         var spec = taskSpecification.build(params);
         var tasks = taskRepository.findAll(spec, PageRequest.of(safePage, size));
