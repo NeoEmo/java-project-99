@@ -23,23 +23,23 @@ public class TaskStatusInitializer implements CommandLineRunner {
             return;
         }
         var draft = new TaskStatus();
-        draft.setName("Draft");
+        draft.setName("draft");
         draft.setSlug("draft");
 
         var toReview = new TaskStatus();
-        toReview.setName("Review");
+        toReview.setName("review");
         toReview.setSlug("review");
 
         var toBeFixed = new TaskStatus();
-        toBeFixed.setName("To be fixed");
+        toBeFixed.setName("to be fixed");
         toBeFixed.setSlug("to_be_fixed");
 
         var toPublish = new TaskStatus();
-        toPublish.setName("To publish");
+        toPublish.setName("to publish");
         toPublish.setSlug("to_publish");
 
         var published = new TaskStatus();
-        published.setName("Published");
+        published.setName("published");
         published.setSlug("published");
 
         taskStatusRepository.saveAll(List.of(draft, toReview, toBeFixed, toPublish, published));
