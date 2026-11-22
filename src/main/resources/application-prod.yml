@@ -7,7 +7,7 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
 
 server:
   error:
@@ -18,7 +18,7 @@ rsa:
   public-key: file:/run/secrets/jwt_public_key
 
 sentry:
-  dsn: ${SENTRY_AUTH_TOKEN}
+  dsn: ${SENTRY_AUTH_TOKEN:}
 
   data-collection:
     user-info: false
