@@ -1,4 +1,4 @@
-.PHONY: start keys
+.PHONY: start keys setup
 
 create-all-txt-java:
 	find . -type f -name "*.java" -exec cat {} + > all_code.txt
@@ -17,6 +17,9 @@ run-dev:
 
 run-dev-win:
 	SPRING_PROFILES_ACTIVE=dev .\gradlew bootRun
+
+setup:
+	./gradlew bootRun
 
 start:
 	$(MAKE) keys
