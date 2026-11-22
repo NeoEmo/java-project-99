@@ -18,6 +18,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -62,6 +67,7 @@ public class SecurityConfig {
 						session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.oauth2ResourceServer(rs ->
 						rs.jwt(jwt -> jwt.decoder(decoder)))
+				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.httpBasic(Customizer.withDefaults());
 		return http.build();
 	}
@@ -76,5 +82,18 @@ public class SecurityConfig {
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) {
 		return config.getAuthenticationManager();
+	}
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowedOriginPatterns(List.of("*"));
+		config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+		config.setAllowedHeaders(List.of("*"));
+		config.setExposedHeaders(List.of("X-Total-Count"));
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);
+		return source;
 	}
 }
