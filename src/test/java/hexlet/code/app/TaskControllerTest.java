@@ -1,6 +1,7 @@
 package hexlet.code.app;
 
 import hexlet.code.app.dto.task.TaskCreateDTO;
+import hexlet.code.app.dto.task.TaskParamsDTO;
 import hexlet.code.app.dto.task.TaskPatchDTO;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.repository.LabelRepository;
@@ -242,5 +243,36 @@ public class TaskControllerTest {
 
         assertThat(newTask.getLabels().stream().map(l -> l.getId()).collect(Collectors.toSet()))
                 .isEqualTo(dto.getLabels());
+    }
+
+    @Test
+    public void testFilterIndex() throws Exception {
+        var params = new TaskParamsDTO();
+        params.setAssigneeId(1L);
+        params.setLabelId(1L);
+        params.setStatus("draft");
+        params.setTitleCont("Test");
+
+        var request = get("/api/tasks")
+                .headers(httpHeaders ->  httpHeaders.add("Authorization", "Bearer " + token))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(params));
+
+        var result = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
+        var body = result.getResponse().getContentAsString();
+
+        assertThatJson(body).isArray();
+        assertThatJson(body).isArray().hasSize(1);
+
+        var rootNode = objectMapper.readTree(body);
+        boolean taskFound = false;
+        for (var taskNode : rootNode) {
+            if(taskNode.get("title").asString().contains(params.getTitleCont())) {
+                taskFound = true;
+                assertThat(taskNode.get("assignee_id").asLong()).isEqualTo(params.getAssigneeId());
+                assertThat(taskNode.get("taskLabelIds").asArray().get(0).asLong()).isEqualTo(params.getLabelId());
+                assertThat(taskNode.get("status").asString()).isEqualTo(params.getStatus());
+            }
+        }
     }
 }
