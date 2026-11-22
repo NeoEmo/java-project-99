@@ -48,7 +48,8 @@ public class GlobalExceptionsHandler {
 	public ResponseEntity<Map<String, String>> handleAuthenticationException(
 			AuthenticationException ex) {
 
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid email or password"));
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+				Map.of("message", "Invalid email or password"));
 	}
 
 	@ExceptionHandler(AccessDeniedException.class)

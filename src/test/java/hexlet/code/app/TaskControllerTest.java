@@ -30,7 +30,10 @@ import java.util.stream.Collectors;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -267,7 +270,7 @@ public class TaskControllerTest {
         var rootNode = objectMapper.readTree(body);
         boolean taskFound = false;
         for (var taskNode : rootNode) {
-            if(taskNode.get("title").asString().contains(params.getTitleCont())) {
+            if (taskNode.get("title").asString().contains(params.getTitleCont())) {
                 taskFound = true;
                 assertThat(taskNode.get("assignee_id").asLong()).isEqualTo(params.getAssigneeId());
                 assertThat(taskNode.get("taskLabelIds").asArray().get(0).asLong()).isEqualTo(params.getLabelId());

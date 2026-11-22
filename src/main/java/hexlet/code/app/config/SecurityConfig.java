@@ -1,7 +1,6 @@
 package hexlet.code.app.config;
 
 import hexlet.code.app.service.CustomUserDetailsService;
-import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,9 +50,11 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/task_statuses/**").permitAll()
-						// Если всё-таки удалять можно не всем, то очепятка в 8-м шаге, и надо будет сообщить
+						// Если всё-таки удалять можно не всем,
+						// то очепятка в 8-м шаге, и надо будет сообщить
 //						.requestMatchers(HttpMethod.DELETE, "/api/tasks/**").permitAll()
-						.requestMatchers("/", "/index.html", "/assets/**", "/favicon.ico").permitAll()
+						.requestMatchers("/", "/index.html",
+								"/assets/**", "/favicon.ico").permitAll()
 						.anyRequest().authenticated())
 				.headers(headers -> headers
 						.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))

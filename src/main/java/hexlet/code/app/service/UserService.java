@@ -110,7 +110,8 @@ public class UserService {
 		}
 
 		if (taskRepository.existsByAssigneeId(id)) {
-			throw new EntityAlreadyAssignedToTaskException("User with id " + id + " already assigned to task!");
+			throw new EntityAlreadyAssignedToTaskException(
+					"User with id " + id + " already assigned to task!");
 		}
 
 		var currentUser = userUtils.getCurrentUser();

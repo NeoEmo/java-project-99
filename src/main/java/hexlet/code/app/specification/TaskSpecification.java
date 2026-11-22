@@ -39,7 +39,9 @@ public class TaskSpecification {
 
     private Specification<Task> withLabelId(Long labelId) {
         return (root, query, cb) -> {
-            if (labelId == null) return cb.conjunction();
+            if (labelId == null) {
+                return cb.conjunction();
+            }
 
             Join<Task, Label> join = root.join("labels");
             query.distinct(true);
