@@ -3,6 +3,7 @@ plugins {
 	id("org.springframework.boot") version "4.1.2"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("checkstyle")
+	id("io.sentry.jvm.gradle") version "6.27.0"
 	jacoco
 }
 
@@ -38,6 +39,10 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
 
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.2.1")
+
+	implementation(platform("io.sentry:sentry-bom:8.65.0"))
+
+	implementation("io.sentry:sentry-async-profiler")
 
 	runtimeOnly("com.h2database:h2")
 	compileOnly("com.h2database:h2")
