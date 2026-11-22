@@ -72,13 +72,12 @@ public class UserControllerTest {
 		var body = result.getResponse().getContentAsString();
 
 		// Проверка на то, что мы вообще получаем Json
-		assertThatJson(body).node("content").isArray();
+		assertThatJson(body).isArray();
 
 		// поиск testUser и проверка его
 		var rootNode = objectMapper.readTree(body);
-		var contentArray = rootNode.get("content");
 		boolean userFound = false;
-		for (var userNode : contentArray) {
+		for (var userNode : rootNode) {
 			if (userNode.get("email").asString().equals(testUser.getEmail())) {
 				userFound = true;
 				assertThat(userNode.get("firstName").asString()).isEqualTo(testUser.getFirstName());
