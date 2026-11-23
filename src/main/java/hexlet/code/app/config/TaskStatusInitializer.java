@@ -31,11 +31,11 @@ public class TaskStatusInitializer implements CommandLineRunner {
         toReview.setSlug("to_review");
 
         var toBeFixed = new TaskStatus();
-        toBeFixed.setName("To be fixed");
+        toBeFixed.setName("ToBeFixed");
         toBeFixed.setSlug("to_be_fixed");
 
         var toPublish = new TaskStatus();
-        toPublish.setName("To publish");
+        toPublish.setName("ToPublish");
         toPublish.setSlug("to_publish");
 
         var published = new TaskStatus();
