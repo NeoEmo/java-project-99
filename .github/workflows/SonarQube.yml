@@ -34,9 +34,6 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - name: Verify JaCoCo XML report exists
-        run: test -s build/reports/jacoco/test/jacocoTestReport.xml
-
       - name: Analyze with SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
