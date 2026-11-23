@@ -19,8 +19,5 @@ run-dev-win:
 	SPRING_PROFILES_ACTIVE=dev .\gradlew bootRun
 
 setup:
-	SPRING_PROFILES_ACTIVE=prod ./gradlew bootRun
-
-start:
 	$(MAKE) keys
 	SPRING_PROFILES_ACTIVE=prod ./gradlew bootRun
