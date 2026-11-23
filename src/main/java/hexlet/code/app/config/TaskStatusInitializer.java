@@ -27,7 +27,7 @@ public class TaskStatusInitializer implements CommandLineRunner {
         draft.setSlug("draft");
 
         var toReview = new TaskStatus();
-        toReview.setName("Review");
+        toReview.setName("ToReview");
         toReview.setSlug("to_review");
 
         var toBeFixed = new TaskStatus();
