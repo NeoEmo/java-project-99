@@ -13,12 +13,11 @@ permissions:
   pull-requests: read
 
 jobs:
-  test-and-analyze:
-    name: Test, coverage, and SonarCloud analysis
+  build:
+    name: Build and analyze
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 0
 
@@ -27,9 +26,6 @@ jobs:
         with:
           distribution: temurin
           java-version: '25'
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
 
       - name: Make gradlew executable
         run: chmod +x gradlew
