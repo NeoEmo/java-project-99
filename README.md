@@ -2,7 +2,7 @@
 
 [![hexlet-check](https://github.com/NeoEmo/java-project-99/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/NeoEmo/java-project-99/actions)
 [![Quality gate status](https://sonarcloud.io/api/project_badges/measure?project=NeoEmo_java-project-99&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=NeoEmo_java-project-99)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=NeoEmo_java-project-99&metric=coverage)](https://sonarcloud.io/summary/new_code?id=NeoEmo_java-project-99)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=NeoEmo_java-project-99&metric=coverage)](https://sonarcloud.io/summary/overall?id=NeoEmo_java-project-99)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=NeoEmo_java-project-99&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=NeoEmo_java-project-99)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=NeoEmo_java-project-99&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=NeoEmo_java-project-99)
 
