@@ -1,14 +1,13 @@
 package hexlet.code.app.config;
 
 import hexlet.code.app.service.CustomUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,20 +21,29 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Autowired
-	private CustomUserDetailsService userDetailsService;
+	private final CustomUserDetailsService userDetailsService;
+	private final PasswordEncoder encoder;
+	private final JwtDecoder decoder;
+	private final String allowedOrigins;
 
-	@Autowired
-	private PasswordEncoder encoder;
-
-	@Autowired
-	private JwtDecoder decoder;
+	public SecurityConfig(
+			CustomUserDetailsService userDetailsService,
+			PasswordEncoder encoder,
+			JwtDecoder decoder,
+			@Value("${app.cors.allowed-origins:}") String allowedOrigins
+	) {
+		this.userDetailsService = userDetailsService;
+		this.encoder = encoder;
+		this.decoder = decoder;
+		this.allowedOrigins = allowedOrigins;
+	}
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -87,11 +95,20 @@ public class SecurityConfig {
 
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
+		List<String> origins = Arrays.stream(allowedOrigins.split(","))
+				.map(String::trim)
+				.filter(origin -> !origin.isEmpty())
+				.toList();
+
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOriginPatterns(List.of("*"));
-		config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-		config.setAllowedHeaders(List.of("*"));
+		config.setAllowedOrigins(origins);
+		config.setAllowedMethods(
+				List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+		);
+		config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 		config.setExposedHeaders(List.of("X-Total-Count"));
+		config.setAllowCredentials(false);
+		config.setMaxAge(3600L);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", config);
