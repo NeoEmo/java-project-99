@@ -4,6 +4,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 	id("checkstyle")
 	id("io.sentry.jvm.gradle") version "6.27.0"
+	id("org.sonarqube") version "7.6.0.18749"
 	jacoco
 }
 
@@ -83,4 +84,13 @@ tasks.jacocoTestReport {
 
 checkstyle {
 	toolVersion = "10.12.4"
+}
+
+sonar {
+	properties {
+		property("sonar.projectKey", "NeoEmo_java-project-99")
+		property("sonar.organization", "neoemo")
+		property("sonar.host.url", "https://sonarcloud.io")
+		property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml")
+	}
 }
