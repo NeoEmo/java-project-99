@@ -32,7 +32,7 @@ public class TaskZInitializer implements CommandLineRunner {
 
         var task2 = new Task();
         task2.setName("Task 2");
-        task2.setTaskStatus(taskStatusRepository.findByName("Review").get());
+        task2.setTaskStatus(taskStatusRepository.findByName("ToReview").get());
 
         var task3 = new Task();
         task3.setName("Task 3");
