@@ -255,7 +255,7 @@ public class TaskControllerTest {
         dto.setIndex(343);
         dto.setAssigneeId(1L);
         dto.setName("sadsddfgdf");
-        dto.setTaskStatus("review");
+        dto.setTaskStatus("to_review");
         dto.setLabels(Set.of(2L));
 
         var request = post("/api/tasks")
@@ -264,6 +264,16 @@ public class TaskControllerTest {
                 .content(objectMapper.writeValueAsString(dto));
 
         mockMvc.perform(request).andExpect(status().isCreated()).andReturn();
+
+        request = get("/api/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders ->  httpHeaders.add("Authorization", "Bearer " + token));
+
+        var subResult = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
+        var subBody = subResult.getResponse().getContentAsString();
+
+        assertThatJson(subBody).isArray();
+        assertThatJson(subBody).isArray().hasSize(2);
 
         var params = new TaskParamsDTO();
         params.setAssigneeId(1L);
