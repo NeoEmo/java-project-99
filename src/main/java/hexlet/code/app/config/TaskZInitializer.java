@@ -46,7 +46,7 @@ public class TaskZInitializer implements CommandLineRunner {
         task5.setName("Task 5");
         task5.setTaskStatus(taskStatusRepository.findByName("Published").get());
 
-        taskRepository.saveAll(List.of(task,task2,task3,task4,task5));
+        taskRepository.saveAll(List.of(task, task2, task3, task4, task5));
 
         System.out.println("Task initialized");
     }

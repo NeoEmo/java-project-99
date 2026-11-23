@@ -59,7 +59,8 @@ public class SecurityConfig {
 						// то очепятка в 8-м шаге, и надо будет сообщить
 //						.requestMatchers(HttpMethod.DELETE, "/api/tasks/**").permitAll()
 						.requestMatchers("/", "/index.html",
-								"/assets/**", "/favicon.ico", "/favicon.ico/**").permitAll()
+								"/assets/**", "/favicon.ico",
+								"/favicon.ico/**").permitAll()
 						.anyRequest().authenticated())
 				.headers(headers -> headers
 						.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
