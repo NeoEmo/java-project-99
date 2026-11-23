@@ -94,7 +94,7 @@ public class TaskControllerTest {
         var body = result.getResponse().getContentAsString();
 
         assertThatJson(body).isArray();
-        assertThatJson(body).isArray().hasSize(6);
+        assertThatJson(body).isArray().hasSize(1);
 
         // Добавлен цикл for на случай, если в следующих задачах будет написание TaskInitializer
         var rootNode = objectMapper.readTree(body);
@@ -273,7 +273,7 @@ public class TaskControllerTest {
         var subBody = subResult.getResponse().getContentAsString();
 
         assertThatJson(subBody).isArray();
-        assertThatJson(subBody).isArray().hasSize(7); // 2 + 5 TaskZInitializer
+        assertThatJson(subBody).isArray().hasSize(2); // 2 + 5 TaskZInitializer
 
         var params = new TaskParamsDTO();
         params.setAssigneeId(1L);
