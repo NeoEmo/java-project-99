@@ -1,6 +1,8 @@
 package hexlet.code.app.api.controller;
 
 import hexlet.code.app.dto.user.UserAuthDTO;
+import hexlet.code.app.exception.ResourceAlreadyExistException;
+import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.utils.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,19 +15,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class AuthController {
+    private final JWTUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
 
     @Autowired
-    private JWTUtils jwtUtils;
+    public AuthController(JWTUtils jwtUtils,
+                          AuthenticationManager authenticationManager,
+                          UserRepository userRepository) {
 
-    @Autowired
-    private AuthenticationManager manager;
+        this.jwtUtils = jwtUtils;
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+    }
 
     @PostMapping("/login")
     public String login(@RequestBody UserAuthDTO data) {
+        if (userRepository.findByEmail(data.getEmail()).isPresent()) {
+            throw new ResourceAlreadyExistException("User email \""
+                    + data.getEmail() + "\" already exists");
+        }
+
+
         var auth = new UsernamePasswordAuthenticationToken(
                 data.getEmail(), data.getPassword());
 
-        manager.authenticate(auth);
+        authenticationManager.authenticate(auth);
         return jwtUtils.generateToken(data.getEmail());
     }
 }
