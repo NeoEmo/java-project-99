@@ -22,7 +22,9 @@
 ```bash
 git clone https://github.com/NeoEmo/java-project-99.git
 cd java-project-99
+make start
 ```
+В случае, если у вас есть Docker-desktop, то достаточно клонировать проект и запустить контейнер через Dockerfile.
 
 ## Ссылка на сайт
 https://neoemo-java-project-99-fd83.twc1.net
