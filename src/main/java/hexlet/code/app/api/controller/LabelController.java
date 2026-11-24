@@ -21,9 +21,12 @@ import java.util.List;
 @RequestMapping("/api/labels")
 @RestController
 public class LabelController {
+    private final LabelService labelService;
 
     @Autowired
-    private LabelService labelService;
+    public LabelController(LabelService labelService) {
+        this.labelService = labelService;
+    }
 
     @GetMapping
     public ResponseEntity<List<LabelDTO>> index() {

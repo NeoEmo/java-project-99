@@ -11,10 +11,12 @@ import java.util.List;
 
 @Component
 public class TaskStatusInitializer implements CommandLineRunner {
+    private final TaskStatusRepository taskStatusRepository;
 
     @Autowired
-    private TaskStatusRepository taskStatusRepository;
-
+    public TaskStatusInitializer(TaskStatusRepository taskStatusRepository) {
+        this.taskStatusRepository = taskStatusRepository;
+    }
 
     @Override
     @Transactional

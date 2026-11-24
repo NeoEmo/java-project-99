@@ -19,15 +19,19 @@ import java.util.List;
 @Service
 @Transactional
 public class TaskService {
+    private final TaskRepository taskRepository;
+    private final TaskSpecification taskSpecification;
+    private final TaskMapper taskMapper;
 
     @Autowired
-    private TaskRepository taskRepository;
+    public TaskService(TaskRepository taskRepository,
+                       TaskSpecification taskSpecification,
+                       TaskMapper taskMapper) {
 
-    @Autowired
-    private TaskMapper taskMapper;
-
-    @Autowired
-    private TaskSpecification taskSpecification;
+        this.taskRepository = taskRepository;
+        this.taskSpecification = taskSpecification;
+        this.taskMapper = taskMapper;
+    }
 
     public List<TaskDTO> index(TaskParamsDTO params, int page, int size) {
         var safePage = Math.max(0, page - 1);

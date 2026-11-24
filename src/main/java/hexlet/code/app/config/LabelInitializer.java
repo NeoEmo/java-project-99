@@ -11,9 +11,12 @@ import java.util.List;
 
 @Component
 public class LabelInitializer implements CommandLineRunner {
+    private final LabelRepository labelRepository;
 
     @Autowired
-    private LabelRepository labelRepository;
+    public LabelInitializer(LabelRepository labelRepository) {
+        this.labelRepository = labelRepository;
+    }
 
     @Override
     @Transactional

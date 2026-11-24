@@ -23,20 +23,25 @@ import java.util.List;
 @Service
 @Transactional
 public class UserService {
-	@Autowired
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
+	private final TaskRepository taskRepository;
+	private final UserMapper userMapper;
+	private final PasswordEncoder passwordEncoder;
+	private final UserUtils userUtils;
 
 	@Autowired
-	private UserMapper userMapper;
+	public UserService(UserRepository userRepository,
+					   TaskRepository taskRepository,
+					   UserMapper userMapper,
+					   PasswordEncoder passwordEncoder,
+					   UserUtils userUtils) {
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	@Autowired
-	private TaskRepository taskRepository;
-
-	@Autowired
-	private UserUtils userUtils;
+		this.userRepository = userRepository;
+		this.taskRepository = taskRepository;
+		this.userMapper = userMapper;
+		this.passwordEncoder = passwordEncoder;
+		this.userUtils = userUtils;
+	}
 
 	public List<UserDTO> index(int page, int size) {
 		var safePage = Math.max(0, page - 1);

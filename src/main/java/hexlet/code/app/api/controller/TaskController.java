@@ -23,8 +23,12 @@ import java.util.List;
 @RequestMapping("/api/tasks")
 @RestController
 public class TaskController {
+    private final TaskService taskService;
+
     @Autowired
-    private TaskService taskService;
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
 
     @GetMapping
     public ResponseEntity<List<TaskDTO>> index(

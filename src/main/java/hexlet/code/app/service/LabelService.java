@@ -16,12 +16,14 @@ import java.util.List;
 @Service
 @Transactional
 public class LabelService {
+    private final LabelRepository labelRepository;
+    private final LabelMapper labelMapper;
 
     @Autowired
-    private LabelRepository labelRepository;
-
-    @Autowired
-    private LabelMapper labelMapper;
+    public LabelService(LabelRepository labelRepository, LabelMapper labelMapper) {
+        this.labelRepository = labelRepository;
+        this.labelMapper = labelMapper;
+    }
 
     public List<LabelDTO> index() {
         return labelRepository.findAll().stream().map(labelMapper::toDTO).toList();

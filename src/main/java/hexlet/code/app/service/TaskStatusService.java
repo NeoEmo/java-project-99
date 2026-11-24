@@ -18,14 +18,19 @@ import java.util.List;
 @Service
 @Transactional
 public class TaskStatusService {
-    @Autowired
-    private TaskStatusRepository taskStatusRepository;
+    private final TaskStatusRepository taskStatusRepository;
+    private final TaskRepository taskRepository;
+    private final TaskStatusMapper taskStatusMapper;
 
     @Autowired
-    private TaskStatusMapper taskStatusMapper;
+    public TaskStatusService(TaskStatusRepository taskStatusRepository,
+                             TaskRepository taskRepository,
+                             TaskStatusMapper taskStatusMapper) {
 
-    @Autowired
-    private TaskRepository taskRepository;
+        this.taskStatusRepository = taskStatusRepository;
+        this.taskRepository = taskRepository;
+        this.taskStatusMapper = taskStatusMapper;
+    }
 
     public List<TaskStatusDTO> index() {
         return taskStatusRepository.findAll().stream().map(taskStatusMapper::toDTO).toList();

@@ -9,11 +9,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DataGenerator implements CommandLineRunner {
-	@Autowired
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
 
 	@Autowired
-	private PasswordEncoder passwordEncoder;
+	public DataGenerator(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+	}
 
 	@Override
 	public void run(String... args) throws Exception {

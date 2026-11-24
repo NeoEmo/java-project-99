@@ -22,9 +22,12 @@ import java.util.List;
 @RequestMapping("/api/task_statuses")
 @RestController
 public class TaskStatusController {
+    private final TaskStatusService taskStatusService;
 
     @Autowired
-    private TaskStatusService taskStatusService;
+    public TaskStatusController(TaskStatusService taskStatusService) {
+        this.taskStatusService = taskStatusService;
+    }
 
     @GetMapping
     public ResponseEntity<List<TaskStatusDTO>> index() {
