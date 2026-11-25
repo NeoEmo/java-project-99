@@ -27,4 +27,9 @@ public class UserUtils {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Current user is not found."));
     }
+
+    public boolean isCurrentUser(Long id) {
+        var currentUser = getCurrentUser();
+        return currentUser != null && currentUser.getId().equals(id);
+    }
 }
