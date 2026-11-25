@@ -18,7 +18,6 @@ import org.mapstruct.ReportingPolicy;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -85,7 +84,8 @@ public abstract class TaskMapper {
         if (setIds == null) {
             return Set.of();
         }
-
-        return new HashSet<>(labelRepository.findAllById(setIds));
+        return setIds.stream()
+                .map(this::idToLabel)
+                .collect(Collectors.toSet());
     }
 }
