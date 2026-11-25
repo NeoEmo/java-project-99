@@ -1,5 +1,6 @@
 package hexlet.code.app.utils;
 
+import hexlet.code.app.exception.ResourceNotFoundException;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class UserUtils {
         }
         var email = authentication.getName();
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Current user is not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Current user is not found."));
     }
 
     public boolean isCurrentUser(Long id) {
