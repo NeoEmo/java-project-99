@@ -1,11 +1,9 @@
 package hexlet.code.app.api.controller;
 
 import hexlet.code.app.dto.user.UserAuthDTO;
-import hexlet.code.app.exception.ResourceAlreadyExistException;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.utils.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;

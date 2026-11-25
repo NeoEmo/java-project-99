@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class TaskService implements CRUDService<TaskDTO, TaskCreateDTO, TaskPatchDTO, TaskParamsDTO>{
+public class TaskService implements CRUDService<TaskDTO, TaskCreateDTO, TaskPatchDTO, TaskParamsDTO> {
     private final TaskRepository taskRepository;
     private final TaskSpecification taskSpecification;
     private final TaskMapper taskMapper;
