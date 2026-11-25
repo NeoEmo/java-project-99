@@ -5,6 +5,7 @@ import hexlet.code.app.dto.task.TaskDTO;
 import hexlet.code.app.dto.task.TaskParamsDTO;
 import hexlet.code.app.dto.task.TaskPatchDTO;
 import hexlet.code.app.service.TaskService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,7 +47,7 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<TaskDTO> create(@RequestBody TaskCreateDTO data) {
+    public ResponseEntity<TaskDTO> create(@Valid @RequestBody TaskCreateDTO data) {
         var dto = taskService.create(data);
         var location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -58,7 +59,7 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH})
-    public ResponseEntity<TaskDTO> update(@PathVariable Long id, @RequestBody TaskPatchDTO data) {
+    public ResponseEntity<TaskDTO> update(@PathVariable Long id, @Valid @RequestBody TaskPatchDTO data) {
         return ResponseEntity.ok().body(taskService.update(data, id));
     }
 
