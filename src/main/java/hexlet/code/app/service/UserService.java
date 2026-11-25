@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,20 +28,17 @@ public class UserService {
 	private final TaskRepository taskRepository;
 	private final UserMapper userMapper;
 	private final PasswordEncoder passwordEncoder;
-	private final UserUtils userUtils;
 
 	@Autowired
 	public UserService(UserRepository userRepository,
 					   TaskRepository taskRepository,
 					   UserMapper userMapper,
-					   PasswordEncoder passwordEncoder,
-					   UserUtils userUtils) {
+					   PasswordEncoder passwordEncoder) {
 
 		this.userRepository = userRepository;
 		this.taskRepository = taskRepository;
 		this.userMapper = userMapper;
 		this.passwordEncoder = passwordEncoder;
-		this.userUtils = userUtils;
 	}
 
 	public List<UserDTO> index(int page, int size) {
@@ -80,11 +78,6 @@ public class UserService {
 	}
 
 	public UserDTO update(UserPatchDTO data, Long id) {
-		var currentUser = userUtils.getCurrentUser();
-
-		if (currentUser == null || !currentUser.getId().equals(id)) {
-			throw new AccessDeniedException("You don`t have permission to edit this user");
-		}
 
 		var user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found!"));
@@ -118,12 +111,6 @@ public class UserService {
 		if (taskRepository.existsByAssigneeId(id)) {
 			throw new EntityAlreadyAssignedToTaskException(
 					"User with id " + id + " already assigned to task!");
-		}
-
-		var currentUser = userUtils.getCurrentUser();
-
-		if (currentUser == null || !currentUser.getId().equals(id)) {
-			throw new AccessDeniedException("You don`t have permission to delete this user");
 		}
 
 		userRepository.deleteById(id);
