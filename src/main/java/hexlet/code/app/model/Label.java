@@ -24,13 +24,15 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "labels")
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Label implements BaseEntity {
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 1000, unique = true, nullable = false)
+    @EqualsAndHashCode.Include
     private String name;
 
     @CreatedDate

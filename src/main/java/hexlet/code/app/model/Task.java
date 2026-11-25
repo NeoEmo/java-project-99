@@ -27,12 +27,14 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "tasks")
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Task implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
+    @EqualsAndHashCode.Include
     private String name;
 
     private Integer index;
