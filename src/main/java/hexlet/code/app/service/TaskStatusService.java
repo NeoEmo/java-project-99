@@ -15,9 +15,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+// Object, т.к. нету TaskStatusParamsDTO
+
 @Service
 @Transactional
-public class TaskStatusService {
+public class TaskStatusService implements CRUDService<TaskStatusDTO, TaskStatusCreateDTO, TaskStatusPatchDTO, Object> {
     private final TaskStatusRepository taskStatusRepository;
     private final TaskRepository taskRepository;
     private final TaskStatusMapper taskStatusMapper;
@@ -32,15 +34,18 @@ public class TaskStatusService {
         this.taskStatusMapper = taskStatusMapper;
     }
 
+    @Override
     public List<TaskStatusDTO> index() {
         return taskStatusRepository.findAll().stream().map(taskStatusMapper::toDTO).toList();
     }
 
+    @Override
     public TaskStatusDTO findById(Long id) {
         return taskStatusRepository.findById(id).map(taskStatusMapper::toDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Task status with id: " + id + " not found!"));
     }
 
+    @Override
     public TaskStatusDTO create(TaskStatusCreateDTO data) {
         if (taskStatusRepository.findBySlug(data.getSlug()).isPresent()) {
             throw new ResourceAlreadyExistException("Task status with slug: " + data.getSlug() + " already exist!");
@@ -49,6 +54,7 @@ public class TaskStatusService {
         return taskStatusMapper.toDTO(taskStatusRepository.save(taskStatus));
     }
 
+    @Override
     public TaskStatusDTO update(TaskStatusPatchDTO data, Long id) {
         var taskStatus = taskStatusRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task status with id: " + id + " not found!"));
@@ -73,6 +79,7 @@ public class TaskStatusService {
         return taskStatusMapper.toDTO(taskStatusRepository.save(taskStatus));
     }
 
+    @Override
     public void delete(Long id) {
         if (!taskStatusRepository.existsById(id)) {
             throw new ResourceNotFoundException("Task status with id: " + id + " not found!");

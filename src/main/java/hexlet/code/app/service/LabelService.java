@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+// Object, т.к. нету LabelParamsDTO
+
 @Service
 @Transactional
-public class LabelService {
+public class LabelService implements CRUDService<LabelDTO, LabelCreateDTO, LabelPatchDTO, Object> {
     private final LabelRepository labelRepository;
     private final LabelMapper labelMapper;
 
@@ -25,15 +27,19 @@ public class LabelService {
         this.labelMapper = labelMapper;
     }
 
+    @Override
     public List<LabelDTO> index() {
         return labelRepository.findAll().stream().map(labelMapper::toDTO).toList();
     }
 
+
+    @Override
     public LabelDTO findById(Long id) {
         return labelRepository.findById(id).map(labelMapper::toDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Label with id " + id + " not found"));
     }
 
+    @Override
     public LabelDTO create(LabelCreateDTO data) {
         if (labelRepository.findByName(data.getName()).isPresent()) {
             throw new ResourceAlreadyExistException("Label with name " + data.getName() + " already exists");
@@ -42,6 +48,7 @@ public class LabelService {
         return labelMapper.toDTO(labelRepository.save(label));
     }
 
+    @Override
     public LabelDTO update(LabelPatchDTO data, Long id) {
         var label = labelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Label with id " + id + " not found"));
@@ -58,6 +65,7 @@ public class LabelService {
         return labelMapper.toDTO(labelRepository.save(label));
     }
 
+    @Override
     public void delete(Long id) {
         if (!labelRepository.existsById(id)) {
             throw new ResourceNotFoundException("Label with id " + id + " not found");

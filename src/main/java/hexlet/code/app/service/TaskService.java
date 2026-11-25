@@ -14,11 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 
 @Service
 @Transactional
-public class TaskService {
+public class TaskService implements CRUDService<TaskDTO, TaskCreateDTO, TaskPatchDTO, TaskParamsDTO>{
     private final TaskRepository taskRepository;
     private final TaskSpecification taskSpecification;
     private final TaskMapper taskMapper;
@@ -33,18 +34,20 @@ public class TaskService {
         this.taskMapper = taskMapper;
     }
 
+    @Override
     public List<TaskDTO> index(TaskParamsDTO params, int page, int size) {
         var safePage = Math.max(0, page - 1);
-        var spec = taskSpecification.build(params);
-        var tasks = taskRepository.findAll(spec, PageRequest.of(safePage, size));
+        var tasks = taskRepository.findAll(taskSpecification.build(params), PageRequest.of(safePage, size));
         return tasks.map(taskMapper::toDTO).toList();
     }
 
+    @Override
     public TaskDTO findById(Long id) {
         return taskRepository.findById(id).map(taskMapper::toDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
     }
 
+    @Override
     public TaskDTO create(TaskCreateDTO data) {
         if (taskRepository.findByName(data.getName()).isPresent()) {
             throw new ResourceAlreadyExistException("Task with name \"" + data.getName() + "\" already exists");
@@ -53,6 +56,7 @@ public class TaskService {
         return taskMapper.toDTO(taskRepository.save(task));
     }
 
+    @Override
     public TaskDTO update(TaskPatchDTO data, Long id) {
         var task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
@@ -77,6 +81,7 @@ public class TaskService {
         return taskMapper.toDTO(taskRepository.save(task));
     }
 
+    @Override
     public void delete(Long id) {
         if (!taskRepository.existsById(id)) {
             throw new ResourceNotFoundException("Task with id " + id + " not found");

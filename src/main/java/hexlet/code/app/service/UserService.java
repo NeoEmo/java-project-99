@@ -9,21 +9,20 @@ import hexlet.code.app.exception.EntityAlreadyAssignedToTaskException;
 import hexlet.code.app.mapper.UserMapper;
 import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.UserRepository;
-import hexlet.code.app.utils.UserUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+// Object, т.к. нету UserParamsDTO
+
 @Service
 @Transactional
-public class UserService {
+public class UserService implements CRUDService<UserDTO, UserCreateDTO, UserPatchDTO, Object> {
 	private final UserRepository userRepository;
 	private final TaskRepository taskRepository;
 	private final UserMapper userMapper;
@@ -41,12 +40,14 @@ public class UserService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
+	@Override
 	public List<UserDTO> index(int page, int size) {
 		var safePage = Math.max(0, page - 1);
 		var pageable = PageRequest.of(safePage, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 		return userRepository.findAll(pageable).map(userMapper::toDTO).toList();
 	}
 
+	@Override
 	public UserDTO create(UserCreateDTO data) {
 		// Пока сделана проверка на уникальность только у почты, но если нужно,
 		// добавлены методы по поиску имени и фамилии
@@ -72,6 +73,7 @@ public class UserService {
 		return userMapper.toDTO(userRepository.save(user));
 	}
 
+	@Override
 	public UserDTO findById(Long id) {
 		return userRepository.findById(id).map(userMapper::toDTO)
 				.orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found!"));
@@ -103,6 +105,7 @@ public class UserService {
 		return userMapper.toDTO(user);
 	}
 
+	@Override
 	public void delete(Long id) {
 		if (!userRepository.existsById(id)) {
 			throw new ResourceNotFoundException("User with id " + id + " not found!");
