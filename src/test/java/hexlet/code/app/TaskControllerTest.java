@@ -234,6 +234,7 @@ public class TaskControllerTest {
         dto.setLabels(new HashSet<Long>(Set.of(labelRepository.findAll()
                 .stream().map(l -> l.getId()).toArray(Long[]::new))));
         dto.setName("Test task2");
+        dto.setTaskStatus(taskStatusRepository.findById(1L).get().getSlug());
 
         var request = post("/api/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
