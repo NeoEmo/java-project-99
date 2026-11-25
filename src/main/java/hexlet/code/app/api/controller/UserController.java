@@ -7,6 +7,7 @@ import hexlet.code.app.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +54,7 @@ public class UserController {
 		return ResponseEntity.created(location).body(dto);
 	}
 
+	@PreAuthorize("@userUtils.isCurrentUser(#id)")
 	@RequestMapping(value = "/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH})
 	public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserPatchDTO data) {
 		return ResponseEntity.ok().body(userService.update(data, id));
@@ -63,6 +65,7 @@ public class UserController {
 		return ResponseEntity.ok().body(userService.findById(id));
 	}
 
+	@PreAuthorize("@userUtils.isCurrentUser(#id)")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		userService.delete(id);
