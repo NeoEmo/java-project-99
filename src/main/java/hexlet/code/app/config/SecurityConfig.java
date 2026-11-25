@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -26,6 +27,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
 	private final CustomUserDetailsService userDetailsService;
@@ -58,7 +60,6 @@ public class SecurityConfig {
 								"/webjars/**"
 						).permitAll()
 						.requestMatchers("/h2-console", "/h2-console/**").permitAll()
-						.requestMatchers("/h2-console", "/h2-console/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/login").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
@@ -67,8 +68,7 @@ public class SecurityConfig {
 						// то очепятка в 8-м шаге, и надо будет сообщить
 //						.requestMatchers(HttpMethod.DELETE, "/api/tasks/**").permitAll()
 						.requestMatchers("/", "/index.html",
-								"/assets/**", "/favicon.ico",
-								"/favicon.ico/**").permitAll()
+								"/assets/**").permitAll()
 						.anyRequest().authenticated())
 				.headers(headers -> headers
 						.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
