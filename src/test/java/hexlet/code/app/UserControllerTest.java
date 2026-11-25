@@ -176,11 +176,6 @@ public class UserControllerTest {
 		mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
 		assertThat(userRepository.existsById(testUser.getId())).isFalse();
 
-		var request2 =  delete("/api/users/" + testUser.getId())
-				.contentType(MediaType.APPLICATION_JSON)
-				.headers(headers -> headers.add("Authorization", "Bearer " + token))
-				.content(objectMapper.writeValueAsString(testUser));
-
-		mockMvc.perform(request2).andExpect(status().isNotFound()).andReturn();
+		mockMvc.perform(request).andExpect(status().isNotFound()).andReturn();
 	}
 }
