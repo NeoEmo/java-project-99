@@ -14,7 +14,9 @@ import java.util.Optional;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long>, JpaSpecificationExecutor<Task> {
+    @EntityGraph(attributePaths = {"labels", "taskStatus"})
     Optional<Task> findByName(String name);
+
     Optional<Task> findByIndex(Integer index);
     boolean existsByAssigneeId(Long assigneeId);
     boolean existsByTaskStatusId(Long statusId);
