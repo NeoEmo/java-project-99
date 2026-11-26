@@ -3,9 +3,11 @@ package hexlet.code.app;
 import hexlet.code.app.dto.user.UserCreateDTO;
 import hexlet.code.app.dto.user.UserPatchDTO;
 import hexlet.code.app.model.User;
+import hexlet.code.app.repository.LabelRepository;
+import hexlet.code.app.repository.TaskRepository;
+import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.utils.JWTUtils;
-import jakarta.transaction.Transactional;
 import org.instancio.Instancio;
 import org.instancio.Select;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,8 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("dev")
-@Transactional
-public class UserControllerTest {
+public class UserControllerTest extends TestInitializer {
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -48,11 +49,27 @@ public class UserControllerTest {
 	@Autowired
 	private JWTUtils jwtUtils;
 
+	@Autowired
+	private TaskRepository taskRepository;
+
+	@Autowired
+	private TaskStatusRepository taskStatusRepository;
+
+	@Autowired
+	private LabelRepository labelRepository;
+
 	private User testUser;
 	private String token;
 
 	@BeforeEach
 	void setUp() throws Exception {
+		taskRepository.deleteAll();
+		taskStatusRepository.deleteAll();
+		userRepository.deleteAll();
+		labelRepository.deleteAll();
+
+		super.build();
+
 		testUser = Instancio.of(User.class)
 				.ignore(Select.field(User::getId))
 				.supply(Select.field(User::getEmail), () -> "example@hotmail.com")

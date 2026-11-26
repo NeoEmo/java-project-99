@@ -9,7 +9,6 @@ import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.utils.JWTUtils;
-import jakarta.transaction.Transactional;
 import org.instancio.Instancio;
 import org.instancio.Select;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,8 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("dev")
-@Transactional
-public class TaskControllerTest {
+public class TaskControllerTest extends TestInitializer {
 
     @Autowired
     private MockMvc mockMvc;
@@ -68,7 +66,14 @@ public class TaskControllerTest {
 
     @BeforeEach
     void setUp() {
-        var user = userRepository.findById(1L).get();
+        taskRepository.deleteAll();
+        taskStatusRepository.deleteAll();
+        userRepository.deleteAll();
+        labelRepository.deleteAll();
+
+        super.build();
+
+        var user = userRepository.findByEmail("hexlet@example.com").get();
         token = jwtUtils.generateToken(user.getUsername());
 
         testTask = Instancio.of(Task.class)
@@ -76,9 +81,10 @@ public class TaskControllerTest {
                 .supply(Select.field(Task::getName), () -> "Test task")
                 .supply(Select.field(Task::getDescription), () -> "Description of test task")
                 .supply(Select.field(Task::getIndex), () -> 954)
-                .supply(Select.field(Task::getTaskStatus), () -> taskStatusRepository.findById(1L).get())
+                .supply(Select.field(Task::getTaskStatus), () -> taskStatusRepository.findByName("Draft").get())
                 .supply(Select.field(Task::getAssignee), () -> user)
-                .supply(Select.field(Task::getLabels), () -> new HashSet<>(Set.of(labelRepository.findById(1L).get())))
+                .supply(Select.field(Task::getLabels), () -> new HashSet<>(
+                        Set.of(labelRepository.findByName("feature").get())))
                 .create();
 
         testTask = taskRepository.save(testTask);
@@ -128,12 +134,12 @@ public class TaskControllerTest {
         mockMvc.perform(request).andExpect(status().isConflict()).andReturn();
 
         dto.setName("Test task2");
-        var request2 = post("/api/tasks")
+        request = post("/api/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders ->  httpHeaders.add("Authorization", "Bearer " + token))
                 .content(objectMapper.writeValueAsString(dto));
 
-        mockMvc.perform(request2).andExpect(status().isCreated()).andReturn();
+        mockMvc.perform(request).andExpect(status().isCreated()).andReturn();
         var savedTask = taskRepository.findByName(dto.getName()).get();
 
         assertThat(savedTask).isNotNull();
@@ -234,7 +240,7 @@ public class TaskControllerTest {
         dto.setLabels(new HashSet<Long>(Set.of(labelRepository.findAll()
                 .stream().map(l -> l.getId()).toArray(Long[]::new))));
         dto.setName("Test task2");
-        dto.setTaskStatus(taskStatusRepository.findById(1L).get().getSlug());
+        dto.setTaskStatus(taskStatusRepository.findBySlug("draft").get().getSlug());
 
         var request = post("/api/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -242,7 +248,8 @@ public class TaskControllerTest {
                 .content(objectMapper.writeValueAsString(dto));
 
         mockMvc.perform(request).andExpect(status().isCreated()).andReturn();
-        var newTask = taskRepository.findByName(dto.getName()).get();
+
+            var newTask = taskRepository.findByName(dto.getName()).get();
         assertThat(newTask.getLabels().size()).isEqualTo(2);
 
         assertThat(newTask.getLabels().stream().map(l -> l.getId()).collect(Collectors.toSet()))
@@ -254,10 +261,10 @@ public class TaskControllerTest {
         // Специально создаём второй Task, который не подходит под все фильтры
         var dto = new TaskCreateDTO();
         dto.setIndex(343);
-        dto.setAssigneeId(1L);
+        dto.setAssigneeId(userRepository.findByEmail("hexlet@example.com").get().getId());
         dto.setName("sadsddfgdf");
         dto.setTaskStatus("to_review");
-        dto.setLabels(Set.of(2L));
+        dto.setLabels(Set.of(labelRepository.findByName("bug").get().getId()));
 
         var request = post("/api/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -274,11 +281,11 @@ public class TaskControllerTest {
         var subBody = subResult.getResponse().getContentAsString();
 
         assertThatJson(subBody).isArray();
-        assertThatJson(subBody).isArray().hasSize(2); // 2 + 5 TaskZInitializer
+        assertThatJson(subBody).isArray().hasSize(2);
 
         var params = new TaskParamsDTO();
-        params.setAssigneeId(1L);
-        params.setLabelId(1L);
+        params.setAssigneeId(userRepository.findByEmail("hexlet@example.com").get().getId());
+        params.setLabelId(labelRepository.findByName("feature").get().getId());
         params.setStatus("draft");
         params.setTitleCont("Test");
 

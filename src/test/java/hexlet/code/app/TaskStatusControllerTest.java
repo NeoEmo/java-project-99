@@ -3,10 +3,11 @@ package hexlet.code.app;
 import hexlet.code.app.dto.taskStatus.TaskStatusCreateDTO;
 import hexlet.code.app.dto.taskStatus.TaskStatusPatchDTO;
 import hexlet.code.app.model.TaskStatus;
+import hexlet.code.app.repository.LabelRepository;
+import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.utils.JWTUtils;
-import jakarta.transaction.Transactional;
 import org.instancio.Instancio;
 import org.instancio.Select;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,8 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("dev")
-@Transactional
-public class TaskStatusControllerTest {
+public class TaskStatusControllerTest extends TestInitializer {
 
     @Autowired
     private MockMvc mockMvc;
@@ -47,6 +47,12 @@ public class TaskStatusControllerTest {
     private UserRepository userRepository;
 
     @Autowired
+    private TaskRepository taskRepository;
+
+    @Autowired
+    private LabelRepository labelRepository;
+
+    @Autowired
     private JWTUtils jwtUtils;
 
     private TaskStatus testTaskStatus;
@@ -54,6 +60,13 @@ public class TaskStatusControllerTest {
 
     @BeforeEach
     void setUp() {
+        taskRepository.deleteAll();
+        taskStatusRepository.deleteAll();
+        userRepository.deleteAll();
+        labelRepository.deleteAll();
+
+        super.build();
+
         testTaskStatus = Instancio.of(TaskStatus.class)
                 .ignore(Select.field(TaskStatus::getId))
                 .supply(Select.field(TaskStatus::getName), () -> "Test status")
@@ -61,7 +74,7 @@ public class TaskStatusControllerTest {
                 .create();
 
         testTaskStatus = taskStatusRepository.save(testTaskStatus);
-        var testUser = userRepository.findById(1L).get();
+        var testUser = userRepository.findByEmail("hexlet@example.com").get();
         token = jwtUtils.generateToken(testUser.getUsername());
     }
 

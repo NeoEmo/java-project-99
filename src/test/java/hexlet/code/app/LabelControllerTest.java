@@ -4,9 +4,10 @@ import hexlet.code.app.dto.label.LabelCreateDTO;
 import hexlet.code.app.dto.label.LabelPatchDTO;
 import hexlet.code.app.model.Label;
 import hexlet.code.app.repository.LabelRepository;
+import hexlet.code.app.repository.TaskRepository;
+import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.utils.JWTUtils;
-import jakarta.transaction.Transactional;
 import org.instancio.Instancio;
 import org.instancio.Select;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,8 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("dev")
-@Transactional
-public class LabelControllerTest {
+public class LabelControllerTest extends TestInitializer {
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,12 +49,25 @@ public class LabelControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TaskStatusRepository taskStatusRepository;
+
+    @Autowired
+    private TaskRepository taskRepository;
+
     private Label testLabel;
     private String token;
 
     @BeforeEach
     void setUp() {
-        var user = userRepository.findById(1L).get();
+        taskRepository.deleteAll();
+        taskStatusRepository.deleteAll();
+        userRepository.deleteAll();
+        labelRepository.deleteAll();
+
+        super.build();
+
+        var user = userRepository.findByEmail("hexlet@example.com").get();
         token = jwtUtils.generateToken(user.getUsername());
 
         testLabel = Instancio.of(Label.class)
