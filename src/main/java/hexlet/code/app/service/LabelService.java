@@ -53,13 +53,13 @@ public class LabelService implements CRUDService<LabelDTO, LabelCreateDTO, Label
         var label = labelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Label with id " + id + " not found"));
 
-        if (data.getName() != null && data.getName().isPresent() && data.getName().get() != null) {
-            var newName = data.getName().get();
-            var existingName = labelRepository.findByName(newName);
-            if (existingName.isPresent() && !existingName.get().getId().equals(id)) {
-                throw new ResourceAlreadyExistException("Label with name " + newName + " already exists");
-            }
-        }
+//        if (data.getName() != null && data.getName().isPresent() && data.getName().get() != null) {
+//            var newName = data.getName().get();
+//            var existingName = labelRepository.findByName(newName);
+//            if (existingName.isPresent() && !existingName.get().getId().equals(id)) {
+//                throw new ResourceAlreadyExistException("Label with name " + newName + " already exists");
+//            }
+//        }
 
         labelMapper.update(data, label);
         return labelMapper.toDTO(labelRepository.save(label));

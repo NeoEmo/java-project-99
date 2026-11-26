@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +24,9 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-@Table(name = "labels")
+@Table(name = "labels", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "name")
+})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Label implements BaseEntity {
     @Id

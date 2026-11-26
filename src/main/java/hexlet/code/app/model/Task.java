@@ -11,6 +11,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +28,9 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-@Table(name = "tasks")
+@Table(name = "tasks", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name", "index"})
+})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Task implements BaseEntity {
     @Id

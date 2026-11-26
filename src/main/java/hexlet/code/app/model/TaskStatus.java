@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +19,9 @@ import java.time.LocalDate;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-@Table(name = "task_status")
+@Table(name = "task_status", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"slug", "name"})
+})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class TaskStatus implements BaseEntity {
     @Id

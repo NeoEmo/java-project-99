@@ -59,21 +59,21 @@ public class TaskStatusService implements CRUDService<TaskStatusDTO, TaskStatusC
         var taskStatus = taskStatusRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task status with id: " + id + " not found!"));
 
-        if (data.getSlug() != null && data.getSlug().isPresent() && data.getSlug().get() != null) {
-            var newSlug = data.getSlug().get();
-            var existingSlug = taskStatusRepository.findBySlug(newSlug);
-            if (existingSlug.isPresent() && !existingSlug.get().getId().equals(id)) {
-                throw new ResourceAlreadyExistException("Task status slug \"" + newSlug + "\" already exist!");
-            }
-        }
-
-        if (data.getName() != null && data.getName().isPresent() && data.getName().get() != null) {
-            var newName = data.getName().get();
-            var existingName = taskStatusRepository.findByName(newName);
-            if (existingName.isPresent() && !existingName.get().getId().equals(id)) {
-                throw new ResourceAlreadyExistException("Task status name \"" + newName + "\" already exist!");
-            }
-        }
+//        if (data.getSlug() != null && data.getSlug().isPresent() && data.getSlug().get() != null) {
+//            var newSlug = data.getSlug().get();
+//            var existingSlug = taskStatusRepository.findBySlug(newSlug);
+//            if (existingSlug.isPresent() && !existingSlug.get().getId().equals(id)) {
+//                throw new ResourceAlreadyExistException("Task status slug \"" + newSlug + "\" already exist!");
+//            }
+//        }
+//
+//        if (data.getName() != null && data.getName().isPresent() && data.getName().get() != null) {
+//            var newName = data.getName().get();
+//            var existingName = taskStatusRepository.findByName(newName);
+//            if (existingName.isPresent() && !existingName.get().getId().equals(id)) {
+//                throw new ResourceAlreadyExistException("Task status name \"" + newName + "\" already exist!");
+//            }
+//        }
 
         taskStatusMapper.update(data, taskStatus);
         return taskStatusMapper.toDTO(taskStatusRepository.save(taskStatus));

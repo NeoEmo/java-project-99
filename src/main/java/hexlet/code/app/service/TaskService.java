@@ -61,21 +61,21 @@ public class TaskService implements CRUDService<TaskDTO, TaskCreateDTO, TaskPatc
         var task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
 
-        if (data.getName() != null && data.getName().isPresent() && data.getName().get() != null) {
-            var newName = data.getName().get();
-            var existingName = taskRepository.findByName(newName);
-            if (existingName.isPresent() && !existingName.get().getId().equals(id)) {
-                throw new ResourceAlreadyExistException("Task name \"" + newName + "\" already exists");
-            }
-        }
-
-        if (data.getIndex() != null && data.getIndex().isPresent() && data.getIndex().get() != null) {
-            var newIndex = data.getIndex().get();
-            var existingIndex = taskRepository.findByIndex(newIndex);
-            if (existingIndex.isPresent() && !existingIndex.get().getId().equals(id)) {
-                throw new ResourceAlreadyExistException("Task index \"" + newIndex + "\" already exists");
-            }
-        }
+//        if (data.getName() != null && data.getName().isPresent() && data.getName().get() != null) {
+//            var newName = data.getName().get();
+//            var existingName = taskRepository.findByName(newName);
+//            if (existingName.isPresent() && !existingName.get().getId().equals(id)) {
+//                throw new ResourceAlreadyExistException("Task name \"" + newName + "\" already exists");
+//            }
+//        }
+//
+//        if (data.getIndex() != null && data.getIndex().isPresent() && data.getIndex().get() != null) {
+//            var newIndex = data.getIndex().get();
+//            var existingIndex = taskRepository.findByIndex(newIndex);
+//            if (existingIndex.isPresent() && !existingIndex.get().getId().equals(id)) {
+//                throw new ResourceAlreadyExistException("Task index \"" + newIndex + "\" already exists");
+//            }
+//        }
 
         taskMapper.update(data, task);
         return taskMapper.toDTO(taskRepository.save(task));

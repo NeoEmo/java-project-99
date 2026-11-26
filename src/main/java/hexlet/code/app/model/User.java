@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,7 +26,9 @@ import java.util.Collection;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email")
+})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User implements BaseEntity, UserDetails {
     @Id
