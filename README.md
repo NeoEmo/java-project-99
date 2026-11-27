@@ -22,6 +22,8 @@
 ```bash
 git clone https://github.com/NeoEmo/java-project-99.git
 cd java-project-99
+# в случае если будут проблемы с правами:
+# sudo chown -R $USER:$USER ~/java-project-99
 make start
 ```
 В случае, если у вас есть Docker-desktop, то достаточно клонировать проект и запустить контейнер через Dockerfile.
