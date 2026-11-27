@@ -33,9 +33,7 @@ start:
 lint:
 	./gradlew checkstyleMain
 	./gradlew checkstyleTest
-	./gradlew test
-
+	
 lint-win:
 	.\gradlew checkstyleMain
 	.\gradlew checkstyleTest
-	.\gradlew test
