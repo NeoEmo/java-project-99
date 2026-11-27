@@ -12,17 +12,14 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 
@@ -33,17 +30,13 @@ import java.util.Set;
 @Table(name = "tasks", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"name", "index"})
 })
-public class Task implements BaseEntity {
+public class Task extends ExtendedEqualsAndHashCode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long id;
 
-    @EqualsAndHashCode.Include
     private String name;
-
     private Integer index;
-
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -65,32 +58,4 @@ public class Task implements BaseEntity {
     )
     @BatchSize(size = 10)
     private Set<Label> labels = new HashSet<>();
-
-    @Override
-    public final boolean equals(Object object) {
-        if (this == object) {
-            return true;
-        }
-        if (object == null) {
-            return false;
-        }
-        Class<?> oEffectiveClass = object instanceof HibernateProxy
-                ? ((HibernateProxy) object).getHibernateLazyInitializer().getPersistentClass()
-                : object.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy
-                ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass()
-                : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) {
-            return false;
-        }
-        Task task = (Task) object;
-        return getId() != null && Objects.equals(getId(), task.getId());
-    }
-
-    @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy
-                ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
-                : getClass().hashCode();
-    }
 }

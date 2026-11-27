@@ -10,16 +10,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -29,14 +26,12 @@ import java.util.Set;
 @Table(name = "labels", uniqueConstraints = {
         @UniqueConstraint(columnNames = "name")
 })
-public class Label implements BaseEntity {
+public class Label extends ExtendedEqualsAndHashCode {
     @Id
-    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 1000, unique = true, nullable = false)
-    @EqualsAndHashCode.Include
     private String name;
 
     @CreatedDate
@@ -45,32 +40,4 @@ public class Label implements BaseEntity {
     @ManyToMany(mappedBy = "labels")
     @JsonIgnore
     private Set<Task> tasks = new HashSet<>();
-
-    @Override
-    public final boolean equals(Object object) {
-        if (this == object) {
-            return true;
-        }
-        if (object == null) {
-            return false;
-        }
-        Class<?> oEffectiveClass = object instanceof HibernateProxy
-                ? ((HibernateProxy) object).getHibernateLazyInitializer().getPersistentClass()
-                : object.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy
-                ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass()
-                : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) {
-            return false;
-        }
-        Label label = (Label) object;
-        return getId() != null && Objects.equals(getId(), label.getId());
-    }
-
-    @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy
-                ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
-                : getClass().hashCode();
-    }
 }
