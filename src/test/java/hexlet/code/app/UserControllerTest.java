@@ -85,7 +85,12 @@ public class UserControllerTest extends TestInitializer {
 
 	@Test
 	public void testIndex() throws Exception {
-		var result = mockMvc.perform(get("/api/users")).andExpect(status().isOk()).andReturn();
+		var request = get("/api/users")
+				.contentType(MediaType.APPLICATION_JSON)
+				.headers(headers -> headers.add("Authorization", "Bearer " + token));
+
+
+		var result = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
 		var body = result.getResponse().getContentAsString();
 
 		// Проверка на то, что мы вообще получаем Json
@@ -171,7 +176,8 @@ public class UserControllerTest extends TestInitializer {
 	@Test
 	public void testShow() throws Exception {
 		var request = get("/api/users/" + testUser.getId())
-				.contentType(MediaType.APPLICATION_JSON);
+				.contentType(MediaType.APPLICATION_JSON)
+				.headers(headers -> headers.add("Authorization", "Bearer " + token));
 
 		var result = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
 		var body = result.getResponse().getContentAsString();
