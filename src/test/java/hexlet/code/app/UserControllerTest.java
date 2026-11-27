@@ -1,5 +1,6 @@
 package hexlet.code.app;
 
+import hexlet.code.app.dto.user.UserAuthDTO;
 import hexlet.code.app.dto.user.UserCreateDTO;
 import hexlet.code.app.dto.user.UserPatchDTO;
 import hexlet.code.app.model.User;
@@ -200,5 +201,26 @@ public class UserControllerTest extends TestInitializer {
 		assertThat(userRepository.existsById(testUser.getId())).isFalse();
 
 		mockMvc.perform(request).andExpect(status().isNotFound()).andReturn();
+	}
+
+	@Test
+	public void testLogin() throws Exception {
+		var auth = new UserAuthDTO();
+		auth.setEmail(testUser.getEmail());
+		auth.setPassword("anotherPassword");
+
+		var request = post("/api/login")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(auth));
+
+		mockMvc.perform(request).andExpect(status().isUnauthorized()).andReturn();
+
+		auth.setPassword("1234567890a");
+
+		request = post("/api/login")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(auth));
+
+		mockMvc.perform(request).andExpect(status().isOk()).andReturn();
 	}
 }
