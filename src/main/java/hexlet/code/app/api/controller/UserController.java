@@ -43,7 +43,7 @@ public class UserController {
 	}
 
 	@PostMapping
-	public ResponseEntity<UserDTO> create(@RequestBody UserCreateDTO data) {
+	public ResponseEntity<UserDTO> create(@Valid @RequestBody UserCreateDTO data) {
 		var dto = userService.create(data);
 		var location = ServletUriComponentsBuilder
 				.fromCurrentRequest()

@@ -4,6 +4,7 @@ import hexlet.code.app.dto.label.LabelCreateDTO;
 import hexlet.code.app.dto.label.LabelDTO;
 import hexlet.code.app.dto.label.LabelPatchDTO;
 import hexlet.code.app.service.LabelService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,7 +42,7 @@ public class LabelController {
     }
 
     @PostMapping
-    public ResponseEntity<LabelDTO> create(@RequestBody LabelCreateDTO data) {
+    public ResponseEntity<LabelDTO> create(@Valid @RequestBody LabelCreateDTO data) {
         var dto = labelService.create(data);
         var location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -53,7 +54,7 @@ public class LabelController {
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH})
-    public ResponseEntity<LabelDTO> update(@PathVariable Long id, @RequestBody LabelPatchDTO data) {
+    public ResponseEntity<LabelDTO> update(@PathVariable Long id, @Valid @RequestBody LabelPatchDTO data) {
         return ResponseEntity.ok().body(labelService.update(data, id));
     }
 

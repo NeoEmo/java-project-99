@@ -3,6 +3,7 @@ package hexlet.code.app.api.controller;
 import hexlet.code.app.dto.user.UserAuthDTO;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.utils.JWTUtils;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody UserAuthDTO data) {
+    public String login(@Valid @RequestBody UserAuthDTO data) {
 
         var auth = new UsernamePasswordAuthenticationToken(
                 data.getEmail(), data.getPassword());
