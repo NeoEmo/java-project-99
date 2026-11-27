@@ -31,7 +31,11 @@ start:
 	SPRING_PROFILES_ACTIVE=prod ./gradlew bootRun
 
 lint:
-	./gradlew build
+	./gradlew checkstyleMain
+	./gradlew checkstyleTest
+	./gradlew test
 
 lint-win:
-	.\gradlew build
+	.\gradlew checkstyleMain
+	.\gradlew checkstyleTest
+	.\gradlew test
