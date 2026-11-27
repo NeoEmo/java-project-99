@@ -62,7 +62,7 @@ public class SecurityConfig {
 						.requestMatchers("/h2-console", "/h2-console/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/login").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-						.requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
+//						.requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/task_statuses/**").permitAll()
 						// Если всё-таки удалять можно не всем,
 						// то очепятка в 8-м шаге, и надо будет сообщить
