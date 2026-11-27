@@ -37,9 +37,29 @@ https://neoemo-java-project-99-fd83.twc1.net
 
 https://asciinema.org/a/v0tOz4Dt2QiRSQYK
 
-### Основной функционал backend
+### Основной функционал backend (#1 Заход на учётную запись админа)
 
+https://asciinema.org/a/wKq6qjBUsrbKd7cy
 
+### Основной функционал backend (#2 Регистрация пользователя + проверка токена на валидность)
+
+https://asciinema.org/a/5hZz60VwcgmuAczm
+
+### Основной функционал backend (#3 Основной функционал)
+
+https://asciinema.org/a/MvMG1l48h9DZ6WAr
+
+Да, там не проверены многие роуты + я тупил как сделать ту или иную вещь. Просто привык уже проверять на стороне фронтенда :D
+
+Дальше идут видосы со стороны фронтенда, который не записать при помощи Asciinema (Пришлось их лить на ютуб, т.к. сложно реализовать в README.md плеер который воспроизводил бы видео формата .mp4, из-за некоторых ограничений функций со стороны github)
+
+### Запуск на localhost Linux + Базовый функционал сайта со стороны фронтенда
+
+https://youtu.be/kThqx9RYWZQ
+
+### Запуск на localhost через Docker (2 способа [IntelliJIDEA\DockerEngine CLI])
+
+https://youtu.be/hwuc0O5kJi8
 
 ---
 
