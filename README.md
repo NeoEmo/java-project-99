@@ -33,11 +33,13 @@ https://neoemo-java-project-99-fd83.twc1.net
 
 <!-- Добавьте примеры запуска и запись asciinema — именно это смотрит работодатель -->
 
-### Как сделать localhost на Linux + основной функционал
-<video width="600" controls>
-  <source src="vidsReadMe/video1.mp4" type="video/mp4">
-  Ваш браузер не поддерживает тег video.
-</video>
+### Как сделать localhost на Linux
+
+https://asciinema.org/a/v0tOz4Dt2QiRSQYK
+
+### Основной функционал backend
+
+
 
 ---
 
