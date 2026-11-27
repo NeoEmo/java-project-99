@@ -1,19 +1,15 @@
 package hexlet.code.app.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -22,7 +18,6 @@ import java.time.LocalDate;
 @Table(name = "task_status", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"slug", "name"})
 })
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class TaskStatus implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,4 +31,20 @@ public class TaskStatus implements BaseEntity {
 
     @CreatedDate
     private LocalDate createdAt;
+
+    @Override
+    public final boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null) return false;
+        Class<?> oEffectiveClass = object instanceof HibernateProxy ? ((HibernateProxy) object).getHibernateLazyInitializer().getPersistentClass() : object.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        TaskStatus that = (TaskStatus) object;
+        return getId() != null && Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
 }
